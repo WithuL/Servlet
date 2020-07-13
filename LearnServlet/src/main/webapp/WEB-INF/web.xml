@@ -6,23 +6,23 @@
          version="3.1"
          metadata-complete="true">
 
+
   <servlet>
-    <servlet-name>hello</servlet-name>
-    <servlet-class>HelloServlet</servlet-class>
+    <servlet-name>ServletDemo1</servlet-name>
+    <servlet-class>Java_0713.ServletDemo1</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>hello</servlet-name>
-    <url-pattern>/he</url-pattern>
+    <servlet-name>ServletDemo1</servlet-name>
+    <url-pattern>/ServletDemo1</url-pattern>
   </servlet-mapping>
 
-
   <servlet>
-    <servlet-name>calc</servlet-name>
-    <servlet-class>CalcServlet</servlet-class>
+    <servlet-name>ServletDemo2</servlet-name>
+    <servlet-class>Java_0713.ServletDemo2</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>calc</servlet-name>
-    <url-pattern>/calc</url-pattern>
+    <servlet-name>ServletDemo2</servlet-name>
+    <url-pattern>/ServletDemo2</url-pattern>
   </servlet-mapping>
 
 </web-app>
