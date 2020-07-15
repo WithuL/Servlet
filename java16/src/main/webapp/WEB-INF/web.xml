@@ -81,4 +81,13 @@
     <url-pattern>/ServletDemo9</url-pattern>
   </servlet-mapping>
 
+  <servlet>
+    <servlet-name>ServletDemo10</servlet-name>
+    <servlet-class>java16_0713.ServletDemo10</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ServletDemo10</servlet-name>
+    <url-pattern>/ServletDemo10</url-pattern>
+  </servlet-mapping>
+
 </web-app>
