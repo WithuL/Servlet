@@ -1,4 +1,4 @@
-package java16_0712;
+package java_0712;
 
 import javax.servlet.http.HttpServlet;
 
