@@ -39,10 +39,25 @@ public class UserDao {
             statement.setString(1, name);
             //3.
             resultSet = statement.executeQuery();
-            
+            if(resultSet.next()) {
+                User user = new User();
+                user.setUserId((resultSet.getInt("userId")));
+                user.setName(resultSet.getString("name"));
+                user.setPassWord(resultSet.getString("passWord"));
+                return user;
+            }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+        return null;
+    }
+
+    public static void main(String[] args) {
+        UserDao userDao = new UserDao();
+        User user = new User();
+        user.setName("xb");
+        user.setPassWord("root");
+        userDao.add(user);
     }
 }
 

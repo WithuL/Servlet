@@ -10,7 +10,7 @@ import java.sql.SQLException;
 
 public class DBUtil {
     private static DataSource dataSource = null;
-    private static final String URL = "jdbc:mysql://127.0.0.1:3306/java_blogdemo?characterEncoding=utf-8&SSL=true";
+    private static final String URL = "jdbc:mysql://127.0.0.1:3306/java_blogdemo?characterEncoding=utf-8&useSSL=true";
     private static String USERNAME = "root";
     private static String PASSWORD = "root";
 
