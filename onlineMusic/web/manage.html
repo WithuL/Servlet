@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>管理面板</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Additional fonts for this theme -->
+    <link href="lib/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    <!-- Custom styles for this theme -->
+    <link href="css/clean-blog.min.css" rel="stylesheet">
+    <script src="js/jquery-3.1.1.min.js"></script>
+
+    <!-- Temporary navbar container fix until Bootstrap 4 is patched -->
+    <style>
+    .navbar-toggler {
+        z-index: 1;
+    }
+    
+    @media (max-width: 576px) {
+        nav > .container {
+            width: 100%;
+        }
+    }
+    </style>
+
+    <style type="text/css">
+        td, th {
+            text-align: center;
+            vertical-align:middle;
+
+        }
+    </style>
+
+    <style type="text/css">
+        a {
+            color: inherit;
+
+        }
+    </style>
+
+    <script type="text/javascript">
+
+
+        $(function () {
+            load();
+        });
+        function load(musicName){
+            $.ajax({
+                url: "/onlineMusic/findMusic",
+                type:"get",
+                data:{musicName:musicName},
+                dataType: "json",
+                success: function(data){
+                    console.log(data.length);
+                    console.log(data);
+                    var s = "";
+                    for (var i = 0; i < data.length; i++) {
+                        var musicUrl = data[i].url+".mp3";
+                        s += "<tr>";
+                        s += "<th style=\"display:table-cell;text-align: center;vertical-align:middle\"> <input id=\""+data[i].id+ "\" type=\"checkbox\"> </th>";
+                        s += "<td style=\"display:table-cell;text-align: center;vertical-align:middle\">" + data[i].title + "</td>";
+                        s += "<td style=\"display:table-cell;text-align: center;vertical-align:middle\">" + data[i].singer + "</td>";
+                        s += "<td style=\"display:table-cell;text-align: center;vertical-align:middle\" <a href=\"\">  <audio src= \""+ musicUrl+"\"  + controls=\"controls\" preload=\"auto\" loop=\"loop\">  >"  + "</audio> </a> </td>";
+                        s+="<td style=\"display:table-cell;text-align: center;vertical-align:middle\"> <button class='btn btn-default btn-sm' onclick=\"deleteInfo("+ data[i].id + ")\" > 删除</button> " + "</td>";
+                        s += "</tr>";
+                    }
+
+                    $("#info").html(s);
+
+                    var audios = document.getElementsByTagName("audio");
+                    // 暂停函数
+                    function pauseAll() {
+                        var self = this;
+                        [].forEach.call(audios, function (i) {
+                            // 将audios中其他的audio全部暂停
+                            i !== self && i.pause();
+                        })
+                    }
+                    // 给play事件绑定暂停函数
+                    [].forEach.call(audios, function (i) {
+                        i.addEventListener("play", pauseAll.bind(i));
+                    });
+                }
+            });
+        }
+        function singerload(musicName){
+            $.ajax({
+                url: "/onlineMusic/findMusicBySinger",
+                type:"get",
+                data:{musicName:musicName},
+                dataType: "json",
+                success: function(data){
+                    console.log(data.length);
+                    console.log(data);
+                    var s = "";
+                    for (var i = 0; i < data.length; i++) {
+                        var musicUrl = data[i].url+".mp3";
+                        s += "<tr>";
+                        s += "<th style=\"display:table-cell;text-align: center;vertical-align:middle\"> <input id=\""+data[i].id+ "\" type=\"checkbox\"> </th>";
+                        s += "<td style=\"display:table-cell;text-align: center;vertical-align:middle\">" + data[i].title + "</td>";
+                        s += "<td style=\"display:table-cell;text-align: center;vertical-align:middle\">" + data[i].singer + "</td>";
+                        s += "<td style=\"display:table-cell;text-align: center;vertical-align:middle\" <a href=\"\">  <audio src= \""+ musicUrl+"\"  + controls=\"controls\" preload=\"auto\" loop=\"loop\">  >"  + "</audio> </a> </td>";
+                        s+="<td style=\"display:table-cell;text-align: center;vertical-align:middle\"> <button class='btn btn-default btn-sm' onclick=\"deleteInfo("+ data[i].id + ")\" > 删除</button> " + "</td>";
+                        s += "</tr>";
+                    }
+
+                    $("#info").html(s);
+
+                    var audios = document.getElementsByTagName("audio");
+                    // 暂停函数
+                    function pauseAll() {
+                        var self = this;
+                        [].forEach.call(audios, function (i) {
+                            // 将audios中其他的audio全部暂停
+                            i !== self && i.pause();
+                        })
+                    }
+                    // 给play事件绑定暂停函数
+                    [].forEach.call(audios, function (i) {
+                        i.addEventListener("play", pauseAll.bind(i));
+                    });
+                }
+            });
+        }
+        function deleteInfo(obj) {
+            console.log(obj);
+            $.ajax({
+                url:"/onlineMusic/deleteServlet",
+                type: "post",
+                //发送给后端的数据
+                data: {"id": obj},
+                dataType: "json",
+                success: function (data) {
+                    if(data.msg===true){
+                        alert("删除成功");
+                        window.location.href="/onlineMusic/manage.html";
+                    }else{
+                        alert("删除失败");
+                    }
+                }
+            });
+        }
+
+        $(function () {
+            $("#submit1").click(function () {
+                var name = $("#exampleInputName2").val();
+                load(name);
+            });
+            $("#submit2").click(function () {
+                var name = $("#exampleInputName2").val();
+                singerload(name);
+            });
+            //请求完成了
+            $.when(load).done(function () {
+                //选取所有类型为CheckBox的元素
+                $("#delete").click(function () {
+                    var i=0;
+                    var id=new Array();
+                    $(":checkbox").each(function () {
+                        //如果被选中
+                        if($(this).is(':checked')){
+                            //获取id的值，存储到id数组当中
+                            id[i] = $(this).attr("id");
+                            i++;
+                        }
+                    });
+                    //发送ajax请求
+                    $.ajax({
+                        url:"/onlineMusic/deleteSelMusicServlet",
+                        //将id数组，发送给deleteSelectedServlet
+                        data:{"id":id},
+                        type: "POST",
+                        dataType:"json",
+                        success:function (data) {
+                            if(data.msg===true){
+                                alert("删除成功");
+                                window.location.href="/onlineMusic/manage.html";
+                            }else{
+                                alert("删除失败");
+                            }
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar fixed-top navbar-toggleable-md navbar-light" id="mainNav">
+        <div class="container">
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                Menu <i class="fa fa-bars"></i>
+            </button>
+            <a class="navbar-brand page-scroll" href="/onlineMusic/index.html">发现音乐</a>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link page-scroll" href="/onlineMusic/index.html">全部音乐</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link page-scroll" href="/onlineMusic/loveIfLogin">喜欢列表</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link page-scroll" href="/onlineMusic/manageIfLogin">音乐管理</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link page-scroll" href="/onlineMusic/story.html">音乐故事</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="intro-header" style="background-image: url('img/contact-bg.jpg')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1">
+                    <div class="page-heading">
+                        <h1>音乐管理</h1>
+                        <hr class="small">
+                        <span class="subheading"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+
+
+
+        <div style="float: left;">
+
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="exampleInputName2">查询歌曲&nbsp;</label>
+                    <input name="name" type="text" class="form-control" id="exampleInputName2" >
+                </div>
+                <p>&nbsp;&nbsp;</p>
+                <button id="submit1" type="button" class="btn btn-default">查询</button>
+            </form>
+        </div>
+
+        <div style="float: right;margin-bottom: 15px">
+            <a class="btn btn-primary" href="/onlineMusic/upload.html">上传音乐</a>
+            <!--<a class="btn btn-primary" href="/MV.html">MV列表</a>-->
+            <a id="delete" class="btn btn-primary" style="color: #ffffff">删除选中</a>
+
+        </div>
+
+
+        <table class="table table-bordered table-hover" >
+            <tr class="success">
+                <th style="display:table-cell;text-align: center;vertical-align:middle">选择</th>
+                <th style="display:table-cell;text-align: center;vertical-align:middle">歌名</th>
+                <th style="display:table-cell;text-align: center;vertical-align:middle">歌手</th>
+                <th style="display:table-cell;text-align: center;vertical-align:middle">歌曲</th>
+                <th style="display:table-cell;text-align: center;vertical-align:middle">操作</th>
+            </tr>
+            <tbody id="info" valign="middle">
+
+            </tbody>
+        </table>
+
+
+
+
+    <!-- Footer -->
+        <footer>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1">
+                        <ul class="list-inline text-center">
+
+                            <li class="list-inline-item">
+                                <a href="https://github.com/WithuL">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                                </a>
+                            </li>
+                        </ul>
+                        <!--<p class="copyright text-muted">已经到达底部了</p>-->
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+
+        <!-- jQuery Version 3.1.1 -->
+    <script src="lib/jquery/jquery.js"></script>
+
+    <!-- Tether -->
+    <script src="lib/tether/tether.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="lib/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Contact Form JavaScript -->
+    <script src="js/jqBootstrapValidation.js"></script>
+    <script src="js/contact_me.js"></script>
+
+    <!-- Theme JavaScript -->
+    <script src="js/clean-blog.min.js"></script>
+    </div>
+</body>
+
+</html>

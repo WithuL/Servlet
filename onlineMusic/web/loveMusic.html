@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>发现音乐</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Additional fonts for this theme -->
+    <link href="lib/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    <!-- Custom styles for this theme -->
+    <link href="css/clean-blog.min.css" rel="stylesheet">
+
+
+    <!--导入js-->
+    <script src="js/jquery-3.1.1.min.js"></script>
+
+
+    <!-- Temporary navbar container fix until Bootstrap 4 is patched -->
+    <style>
+    .navbar-toggler {
+        z-index: 1;
+    }
+    
+    @media (max-width: 576px) {
+        nav > .container {
+            width: 100%;
+        }
+    }
+    </style>
+
+    <style type="text/css">
+        td, th {
+            text-align: center;
+        }
+    </style>
+
+    <script>
+        $(function () {
+            load();
+        });
+        function load(loveMusicName){
+            $.ajax({
+                url: "/onlineMusic/findLoveMusic",
+                type:"get",
+                data:{loveMusicName:loveMusicName},
+                dataType: "json",
+                success: function(data){
+                    console.log(data.length);
+                    console.log(data);
+                    var s = "";
+                    for (var i = 0; i < data.length; i++) {
+                        var musicUrl = data[i].url+".mp3";
+                        s += "<tr>";
+                        s += "<td style=\"display:table-cell;text-align: center;vertical-align:middle\">" + (i+1)+ "</td>";
+                        s += "<td style=\"display:table-cell;text-align: center;vertical-align:middle\">" + data[i].title + "</td>";
+                        s += "<td style=\"display:table-cell;text-align: center;vertical-align:middle\">" + data[i].singer + "</td>";
+                        s += "<td style=\"display:table-cell;text-align: center;vertical-align:middle\" <a href=\"\">  <audio src= \""+ musicUrl+"\"  + controls=\"controls\" preload=\"auto\" loop=\"loop\">  >"  + "</audio> </a> </td>";
+                        s+="<td style=\"display:table-cell;text-align: center;vertical-align:middle\" > <button class='btn btn-default btn-sm' onclick=\"deleteInfo("+ data[i].id + ")\" > 移除</button> " +
+                            "</td>";
+                        s += "</tr>";
+                    }
+                    $("#info").html(s);
+                }
+            });
+        }
+
+        function deleteInfo(obj) {
+            console.log(obj);
+            $.ajax({
+                url:"/onlineMusic/removeLoveServlet",
+                type: "post",
+                //发送给后端的数据
+                data: {"id": obj},
+                dataType: "json",
+                success: function (data) {
+                    if(data.msg===true){
+                        alert("移除成功");
+                        window.location.href="/onlineMusic/loveMusic.html";
+                    }else{
+                        alert("移除失败");
+                    }
+                }
+            });
+        }
+
+        $(function () {
+            $("#submit1").click(function () {
+                var name = $("#exampleInputName2").val();
+                load(name);
+            });
+        });
+    </script>
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar fixed-top navbar-toggleable-md navbar-light" id="mainNav">
+        <div class="container">
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                Menu <i class="fa fa-bars"></i>
+            </button>
+            <a class="navbar-brand page-scroll" href="/onlineMusic/index.html">发现音乐</a>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link page-scroll" href="/onlineMusic/index.html">全部音乐</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link page-scroll" href="/onlineMusic/loveIfLogin">喜欢列表</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link page-scroll" href="/onlineMusic/manageIfLogin">音乐管理</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link page-scroll" href="/onlineMusic/story.html">音乐故事</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="intro-header" style="background-image: url('img/about-bg.jpg')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1">
+                    <div class="page-heading">
+                        <h1>喜欢列表</h1>
+                        <span class="subheading">记录我的喜欢</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+
+        <div style="float: left;">
+        <form class="form-inline">
+            <div class="form-group">
+                <label for="exampleInputName2">查询喜欢的歌曲&nbsp;</label>
+                <input  name="name" type="text" class="form-control" id="exampleInputName2"  >
+            </div>
+            <p>&nbsp;&nbsp;</p>
+            <button id="submit1" type="button" class="btn btn-default">查询</button>
+        </form>
+        </div>
+
+    <div style="float: right;margin-bottom: 15px">
+        <a class="btn btn-primary" href="/onlineMusic/index.html">回到首页</a>
+    </div>
+
+        <table border="1" class="table table-bordered table-hover">
+            <tr class="success">
+                <th style="display:table-cell;text-align: center;vertical-align:middle">序号</th>
+                <th style="display:table-cell;text-align: center;vertical-align:middle">歌名</th>
+                <th style="display:table-cell;text-align: center;vertical-align:middle">歌手</th>
+                <th style="display:table-cell;text-align: center;vertical-align:middle">歌曲</th>
+                <th style="display:table-cell;text-align: center;vertical-align:middle">操作</th>
+            </tr>
+            <tbody id="info" valign="middle">
+
+            </tbody>
+        </table>
+
+
+        <!-- Footer -->
+        <footer>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1">
+                        <ul class="list-inline text-center">
+
+                            <li class="list-inline-item">
+                                <a href="https://github.com/WithuL">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                                </a>
+                            </li>
+                        </ul>
+                        <!--<p class="copyright text-muted">已经到达底部了</p>-->
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+    <!-- jQuery Version 3.1.1 -->
+    <script src="lib/jquery/jquery.js"></script>
+
+    <!-- Tether -->
+    <script src="lib/tether/tether.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="lib/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Theme JavaScript -->
+    <script src="js/clean-blog.min.js"></script>
+    </div>
+
+</body>
+
+</html>
