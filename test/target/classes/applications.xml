@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           https://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="bit" class="java.lang.String"></bean>
+<!--    <bean class="java.lang.String"></bean>-->
+    <bean id="d1" class="animal.Duck">
+        <property name="name" value="小黄黄鸭子"></property>
+        <property name="age" value="2"></property>
+    </bean>
+    <bean id="d2" class="animal.Duck2">
+        <constructor-arg name="n" value="烤鸭"/>
+        <constructor-arg name="a" value="4"/>
+    </bean>
+
+    <bean id ="k1" class="animal.Duck3">
+        <property name="name" value="酱鸭"></property>
+        <property name="age" value="2"></property>
+<!--        <property name="next" value="null"></property>-->
+    </bean>
+    <bean id ="k2" class="animal.Duck3">
+        <property name="name" value="甜皮鸭"></property>
+        <property name="age" value="2"></property>
+        <property name="next" ref="k1"></property>
+
+    </bean>
+    <bean id ="k3" class="animal.Duck3">
+        <property name="name" value="北京烤鸭   "></property>
+        <property name="age" value="2"></property>
+        <property name="next" ref="k2"></property>
+
+    </bean>
+</beans>
