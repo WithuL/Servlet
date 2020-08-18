@@ -7,9 +7,11 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="ordersystem" />
-        <module name="spring-study" />
         <module name="test" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="spring-study" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

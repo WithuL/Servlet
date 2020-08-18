@@ -25,7 +25,7 @@
     <show-object-properties value="true" />
     <loaded-nodes>
       <connection connection-id="f83679d4-0fa3-47c4-8829-561ea9b9a008">
-        <schema name="ordersystem" object-types="table, column, procedure, function, dataset trigger, view, index, constraint" />
+        <schema name="ordersystem" object-types="function, table, view, constraint, procedure, index, column, dataset trigger" />
       </connection>
     </loaded-nodes>
   </component>
@@ -34,7 +34,7 @@
       <console name="Connection" type="STANDARD" schema="" session="Main" />
     </connection>
     <connection id="f83679d4-0fa3-47c4-8829-561ea9b9a008">
-      <console name="点餐系统" type="STANDARD" schema="ordersystem" session="Main"><![CDATA[show tables;]]></console>
+      <console name="点餐系统" type="STANDARD" schema="ordersystem" session="Main">show tables;</console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
