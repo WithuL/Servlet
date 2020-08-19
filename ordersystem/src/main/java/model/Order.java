@@ -1,29 +1,33 @@
 package model;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
+// 通过这个 Order 来表示一个完整的订单.
+// 包括订单中都有哪些菜
+// Order 类对应到两张表: order_user + order_dish
 public class Order {
-    private int orderid;
-    private int userid;
+    private int orderId;
+    private int userId;
     private Timestamp time;
-    private int isdone;
-    private List<Dish> dishes;
+    private int isDone;
+    private List<Dish> dishes;  // 一个订单中包含了很多菜
 
-    public int getOrderid() {
-        return orderid;
+    public int getOrderId() {
+        return orderId;
     }
 
-    public void setOrderid(int orderid) {
-        this.orderid = orderid;
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
     }
 
-    public int getUserid() {
-        return userid;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setUserid(int userid) {
-        this.userid = userid;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public Timestamp getTime() {
@@ -34,12 +38,12 @@ public class Order {
         this.time = time;
     }
 
-    public int getIsdone() {
-        return isdone;
+    public int getIsDone() {
+        return isDone;
     }
 
-    public void setIsdone(int isdone) {
-        this.isdone = isdone;
+    public void setIsDone(int isDone) {
+        this.isDone = isDone;
     }
 
     public List<Dish> getDishes() {

@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import model.User;
 import model.UserDao;
 import util.OrderSystemException;
-import util.ReqReader;
+import util.OrderSystemUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,81 +17,83 @@ import java.io.IOException;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
-    //读取的JSON请求对象
+    private Gson gson = new GsonBuilder().create();
+
     static class Request {
         public String name;
         public String password;
     }
-    //发送的JSON响应对象
-    static class Responce {
-        int ok; //0代表失败, 1成功
-        String reason ;
-        String name;
-        int isAdmin;
 
+    static class Response {
+        public int ok;
+        public String reason;
+        public String name;
+        public int isAdmin;
     }
-    private Gson gson = new GsonBuilder().create();
 
-    //2.登录
+    // 登陆功能 API
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("utf-8");
-        Responce responce = new Responce();
-        //1.先读取req
+        Response response = new Response();
         try {
-            String body = ReqReader.readBody(req);
+            // 1. 读取 body 数据
+            String body = OrderSystemUtil.readBody(req);
+            // 2. 将读取的数据解析成对象
             Request request = gson.fromJson(body, Request.class);
+            // 3. 按照用户名进行查找, 并校验密码
             UserDao userDao = new UserDao();
             User user = userDao.selectByName(request.name);
-            if(user == null || !user.getPassword().equals(request.password)) {
-                throw new OrderSystemException("您输入的用户名有误,请重试!");
+            if (user == null || !user.getPassword().equals(request.password)) {
+                throw new OrderSystemException("用户名或密码错误");
             }
+            // 5. 如果登陆成功, 就创建 session 对象. [重要]
             HttpSession session = req.getSession(true);
             session.setAttribute("user", user);
-            responce.ok = 1;
-            responce.isAdmin = user.getIsAdmin();
-            responce.name = user.getName();
-            responce.reason = "";
+            response.ok = 1;
+            response.reason = "";
+            response.name = user.getName();
+            response.isAdmin = user.getIsAdmin();
         } catch (OrderSystemException e) {
-            responce.ok = 0;
-            responce.reason = e.getMessage();
-            e.printStackTrace();
+            // 4. 如果登陆失败, 返回错误提示
+            response.ok = 0;
+            response.reason = e.getMessage();
         } finally {
+            // 6. 结果写回给客户端
             resp.setContentType("application/json; charset=utf-8");
-            String jsonString = gson.toJson(responce);
+            String jsonString = gson.toJson(response);
             resp.getWriter().write(jsonString);
         }
     }
 
-    //3.检测登陆状态
+    // 对应到检测登陆状态 API
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("utf-8");
-        resp.setCharacterEncoding("utf-8");
-        Responce responce = new Responce();
-        //检测是否登录,session不存在则未登录
-            try {
-                HttpSession session = req.getSession(false);
-                if(session == null) {
-                    throw new OrderSystemException("您尚未登陆");
-                }
-                User user = (User) session.getAttribute("user");
-                if(user == null) {
-                    throw new OrderSystemException("您尚未登陆");
-                }
-                //到此处则已登录
-                responce.name = user.getName();
-                responce.reason = "";
-                responce.isAdmin = user.getIsAdmin();
-                responce.ok = 1;
-            } catch (OrderSystemException e) {
-                responce.ok = 0;
-                responce.reason = e.getMessage();
-                e.printStackTrace();
-            }finally {
-                resp.setContentType("application/json; utf-8");
-                String jsonString = gson.toJson(responce);
-                resp.getWriter().write(jsonString);
+        Response response = new Response();
+        try {
+            // 1. 获取用户当前的 session, 如果 session 不存在, 认为未登录状态
+            HttpSession session = req.getSession(false);
+            if (session == null) {
+                throw new OrderSystemException("当前未登录");
             }
+            // 2. 从 session 中获取 user 对象
+            User user = (User) session.getAttribute("user");
+            if (user == null) {
+                throw new OrderSystemException("当前未登录");
+            }
+            // 3. 把 user 中的信息填充进返回值结果中.
+            response.ok = 1;
+            response.reason = "";
+            response.name = user.getName();
+            response.isAdmin = user.getIsAdmin();
+        } catch (OrderSystemException e) {
+            response.ok = 0;
+            response.reason = e.getMessage();
+        } finally {
+            resp.setContentType("application/json; charset=utf-8");
+            String jsonString = gson.toJson(response);
+            resp.getWriter().write(jsonString);
+        }
     }
 }

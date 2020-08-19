@@ -1,16 +1,16 @@
 package model;
 
 public class Dish {
-    private int dishid;
-    private String name ;
+    private int dishId;
+    private String name;
     private int price;
 
-    public int getDishid() {
-        return dishid;
+    public int getDishId() {
+        return dishId;
     }
 
-    public void setDishid(int dishid) {
-        this.dishid = dishid;
+    public void setDishId(int dishId) {
+        this.dishId = dishId;
     }
 
     public String getName() {
@@ -32,7 +32,7 @@ public class Dish {
     @Override
     public String toString() {
         return "Dish{" +
-                "dishid=" + dishid +
+                "dishId=" + dishId +
                 ", name='" + name + '\'' +
                 ", price=" + price +
                 '}';

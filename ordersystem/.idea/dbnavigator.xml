@@ -25,7 +25,7 @@
     <show-object-properties value="true" />
     <loaded-nodes>
       <connection connection-id="f83679d4-0fa3-47c4-8829-561ea9b9a008">
-        <schema name="ordersystem" object-types="function, table, view, constraint, procedure, index, column, dataset trigger" />
+        <schema name="ordersystem" object-types="view, table" />
       </connection>
     </loaded-nodes>
   </component>
